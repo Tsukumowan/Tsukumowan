@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+#include <atcoder/all>
+using namespace std;
+using namespace atcoder;
+
+int64_t op(int64_t a, int64_t b){
+  return max(a, b);
+}
+
+int64_t e(){
+  return 0;
+}
+
+int main(){
+  int n;
+  cin >> n;
+  vector<int64_t> v(n);
+  for(int i = 0;i < n;i++) cin >> v[i];
+  segtree<int64_t, op, e> l(310000);
+  vector<int64_t> ans(n);
+  for(int i = 0;i < n;i++){
+    ans[i] = l.prod(0, v[i]) + 1;
+    l.set(v[i], ans[i]);
+  }
+  segtree<int64_t, op, e> r(310000);
+  for(int i = n - 1;i >= 0;i--){
+    int64_t R = r.prod(0, v[i]);
+    ans[i] += R;
+    r.set(v[i], R + 1);
+  }
+  auto it = max_element(ans.begin(), ans.end());
+  cout << *it << endl;
+}
